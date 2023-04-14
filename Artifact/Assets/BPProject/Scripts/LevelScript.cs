@@ -23,13 +23,7 @@ namespace Project
 		// Holds the gamecontroller in the scene
 		internal GameObject gameController;
 
-		/// <summary>
-		/// Start is only called once in the lifetime of the behaviour.
-		/// The difference between Awake and Start is that Start is only called if the script instance is enabled.
-		/// This allows you to delay any initialization code, until it is really needed.
-		/// Awake is always called before any Start functions.
-		/// This allows you to order initialization of scripts
-		/// </summary>
+
 		void Start()
 		{
 		    // If there is a gamecontroller in the scene, assign it to the variable
@@ -39,10 +33,6 @@ namespace Project
 			if ( !soundSource && GameObject.FindGameObjectWithTag(soundSourceTag) )    soundSource = GameObject.FindGameObjectWithTag(soundSourceTag);
 		}
 	
-		/// <summary>
-		/// Loads the level.
-		/// </summary>
-		/// <param name="levelName">Level name.</param>
 		public void LoadLevel()
 		{
 			Time.timeScale = 1;

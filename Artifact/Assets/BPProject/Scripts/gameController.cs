@@ -17,7 +17,7 @@ namespace Project
         // Holds the current event system
         internal EventSystem eventSystem;
 
-        // Defines the type of pairs we have. These are either "ImageText" or "TextText" 
+        // Defines the type of pairs. These are either "ImageText" or "TextText" 
         internal string pairsType = "";
 
         [Tooltip("A list of all the image cards in the game. The text is derived from the text inside the card")]
@@ -44,7 +44,7 @@ namespace Project
         [Tooltip("How many points we get for each matched pair. This value is multiplied by the number of the level we are on. Ex: Level 1 give 100 points, Level 2 gives 200 points.")]
         public float bonusPerLevel;
 
-        // The current level we are on, 1 being the first level in the game
+        // The current level, 1 being the first level in the game
         internal int currentLevel = 1;
 
         // The text object that shows which level we are in. This text object should be placed inside the GameController object and named "LevelText"
@@ -53,7 +53,7 @@ namespace Project
         [Tooltip("The name of a numbered level (ex: Round 1, Level 1, etc)")]
         public string levelNamePrefix = "ROUND";
 
-        [Tooltip("If set to true, the game will repeat from the start, shuffling the questions again")]
+        [Tooltip("If set to true, the game will repeat from the start")]
         public bool endlessMode = false;
 
         // An array that holds all the pairs of the current level. This is used so that we can later remove them easily when the level is completed.
@@ -72,7 +72,7 @@ namespace Project
         public int pairsIncrease = 2;
 
         [Tooltip("The maximum number of pairs allowed in the game")]
-        public int pairsMaximum = 8;
+        public int pairsMaximum = 16;
 
         // Did we select the first object in the pair, or the second?
         internal bool firstOfPair = true;
@@ -140,16 +140,10 @@ namespace Project
         // A general use index
         internal int index = 0;
 
-        /// <summary>
-        /// Start is only called once in the lifetime of the behaviour.
-        /// The difference between Awake and Start is that Start is only called if the script instance is enabled.
-        /// This allows you to delay any initialization code, until it is really needed.
-        /// Awake is always called before any Start functions.
-        /// This allows you to order initialization of scripts
-        /// </summary>
+
         void Start()
         {
-            // Disable multitouch so that we don't tap two answers at the same time ( prevents multi-answer cheating, thanks to Miguel Paolino for catching this bug )
+ 
             Input.multiTouchEnabled = false;
 
             // Cache the current event system so we can position the cursor correctly
@@ -199,7 +193,7 @@ namespace Project
             //Assign the sound source for easier access
             if (GameObject.FindGameObjectWithTag(soundSourceTag)) soundSource = GameObject.FindGameObjectWithTag(soundSourceTag);
 
-            // Shuffle all the pairs in the game. If we have a TextText array, shuffle it instead.
+            // Shuffle all the pairs in the game.
             if (pairsImage.Length > 0)
             {
                 // Set the pairs type
