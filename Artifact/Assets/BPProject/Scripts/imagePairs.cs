@@ -12,7 +12,7 @@ namespace Project
 
         void Awake()
         {
-            // If we have a game controller, assign the list of text pairs to it
+    
             if (GetComponent<gameController>()) GetComponent<gameController>().pairsImage = pairsImage;
         }
 	}

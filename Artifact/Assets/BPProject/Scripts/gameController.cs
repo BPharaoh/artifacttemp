@@ -284,7 +284,6 @@ namespace Project
         /// <summary>
         /// Pause the game, and shows the pause menu
         /// </summary>
-        /// <param name="showMenu">If set to <c>true</c> show menu.</param>
         public void Pause(bool showMenu)
         {
             isPaused = true;
@@ -328,7 +327,6 @@ namespace Project
         /// <summary>
         /// Selects an object for the pair. If two objects are selected, they are compared to see if they match
         /// </summary>
-        /// <param name="selectedObject"></param>
         public void SelectObject(Transform selectedObject)
         {
             if (firstOfPair == true) // Selecting the first object of a pair
@@ -418,8 +416,6 @@ namespace Project
         /// <summary>
         /// Compares two selected card objects. If they are the same we get bonus and the cards are removed from the level. If wrong, the cards are returned to face down
         /// </summary>
-        /// <param name="selectedObject"></param>
-        /// <returns></returns>
         IEnumerator Compare(Transform selectedObject)
         {
             yield return new WaitForSeconds(0.4f);
@@ -491,7 +487,6 @@ namespace Project
         /// <summary>
         /// Shuffles the specified sprite pairs list, and returns it
         /// </summary>
-        /// <param name="s">A list of sprite pairs</param>
         Sprite[] ShuffleImagePairs(Sprite[] pairs)
         {
             // Go through all the sprite pairs and shuffle them
@@ -543,11 +538,10 @@ namespace Project
         /// </summary>
         void UpdateTime()
         {
-            // Update the time only if we have a timer icon canvas assigned
+           
             if (timerIcon)
             {
-                // Update the timer circle, if we have one
-                if (timerBar)
+                // Update the timer
                 {
                     // If the timer is running, display the fill amount left. Otherwise refill the amount back to 100%
                     timerBar.fillAmount = timeLeft / time;
@@ -578,7 +572,6 @@ namespace Project
         /// <summary>
 		/// Change the score
 		/// </summary>
-		/// <param name="changeValue">Change value</param>
 		void ChangeScore(float changeValue)
         {
             score += changeValue;
