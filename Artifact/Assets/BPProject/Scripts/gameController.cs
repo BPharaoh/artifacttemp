@@ -200,10 +200,10 @@ namespace Project
                 pairsType = "Image";
 
                 // Randomize the list of pairs
-                if ( randomizePairs == true ) pairsImage = ShuffleImagePairs(pairsImage);
+                if ( randomizePairs == true ) pairsImage = shuffleimagePairs(pairsImage);
 
                 // Create the first level, Image - Text game mode
-                UpdateLevel();
+                updateLevel();
             }
             else if (pairsText.Length > 0)
             {
@@ -211,10 +211,10 @@ namespace Project
                 pairsType = "Text";
 
                 // Randomize the list of pairs
-                if ( randomizePairs == true ) pairsText = ShuffleTextPairs(pairsText);
+                if ( randomizePairs == true ) pairsText = shuffletextPairs(pairsText);
 
                 // Create the first level, Text - Text game mode
-                UpdateLevel();
+                updateLevel();
             }
         }
 
@@ -284,7 +284,7 @@ namespace Project
         /// <summary>
         /// Pause the game, and shows the pause menu
         /// </summary>
-        public void Pause(bool showMenu)
+        public void Pause(bool ShowMenu)
         {
             isPaused = true;
 
@@ -295,7 +295,7 @@ namespace Project
             if (eventSystem) buttonBeforePause = eventSystem.currentSelectedGameObject;
 
             //Show the pause screen and hide the game screen
-            if (showMenu == true)
+            if (ShowMenu == true)
             {
                 if (pauseCanvas) pauseCanvas.gameObject.SetActive(true);
 
@@ -327,20 +327,20 @@ namespace Project
         /// <summary>
         /// Selects an object for the pair. If two objects are selected, they are compared to see if they match
         /// </summary>
-        public void SelectObject(Transform selectedObject)
+        public void SelectObject(Transform ObjectSelected)
         {
             if (firstOfPair == true) // Selecting the first object of a pair
             {
                 // Make the selected object unclickable 
-                selectedObject.GetComponent<Button>().interactable = false;
+                ObjectSelected.GetComponent<Button>().interactable = false;
 
                 // Select the next available button for keyboard/gamepad controls
-                if (eventSystem) eventSystem.SetSelectedGameObject(selectedObject.gameObject);
+                if (eventSystem) eventSystem.SetSelectedGameObject(ObjectSelected.gameObject);
 
                 // Animate the object when selected
-                if (selectedObject.GetComponent<Animator>()) selectedObject.GetComponent<Animator>().Play("Select");
+                if (ObjectSelected.GetComponent<Animator>()) ObjectSelected.GetComponent<Animator>().Play("Select");
 
-                firstObject = selectedObject;
+                firstObject = ObjectSelected;
 
                 firstOfPair = false;
 
@@ -351,13 +351,13 @@ namespace Project
                     if (soundSelect) soundSource.GetComponent<AudioSource>().PlayOneShot(soundSelect);
 
                     // If this button has a sound assingned to it, play it
-                    if (selectedObject.GetComponent<playSound>()) selectedObject.GetComponent<playSound>().PlaySoundCurrent();
+                    if (ObjectSelected.GetComponent<playSound>()) ObjectSelected.GetComponent<playSound>().PlaySoundCurrent();
                 }
 
                 // Play the sound associated with this card name
                 if (soundSource)
                 {
-                    var soundResource = Resources.Load<AudioClip>("Sounds/" + selectedObject.Find("CardFront/Text").GetComponent<Text>().text);
+                    var soundResource = Resources.Load<AudioClip>("Sounds/" + ObjectSelected.Find("CardFront/Text").GetComponent<Text>().text);
 
                     if (soundResource)
                     {
@@ -373,7 +373,7 @@ namespace Project
                 foreach (RectTransform imageButton in cardsGridObject) imageButton.GetComponent<Button>().interactable = false;
 
                 // Animate the object when selected
-                if (selectedObject.GetComponent<Animator>()) selectedObject.GetComponent<Animator>().Play("Select");
+                if (ObjectSelected.GetComponent<Animator>()) ObjectSelected.GetComponent<Animator>().Play("Select");
                 
                 //If there is a source and a sound, play it from the source
                 if (soundSource)
@@ -382,26 +382,26 @@ namespace Project
                     if (soundSelect) soundSource.GetComponent<AudioSource>().PlayOneShot(soundSelect);
 
                     // If this button has a sound assingned to it, play it
-                    if (selectedObject.GetComponent<playSound>()) selectedObject.GetComponent<playSound>().PlaySoundCurrent();
+                    if (ObjectSelected.GetComponent<playSound>()) ObjectSelected.GetComponent<playSound>().PlaySoundCurrent();
                 }
                 
-                if (firstObject == selectedObject) //If we click on the same object that we already selected, unselect it and set it back to idle state ( in animation )
+                if (firstObject == ObjectSelected) //If we click on the same object that we already selected, unselect it and set it back to idle state ( in animation )
                 {
-                    if (selectedObject.GetComponent<Animator>())
+                    if (ObjectSelected.GetComponent<Animator>())
                     {
                         firstObject.GetComponent<Animator>().Play("Unselect");
-                        selectedObject.GetComponent<Animator>().Play("Unselect");
+                        ObjectSelected.GetComponent<Animator>().Play("Unselect");
                     }
                 }
                 else // Check if the two objects match
                 {
-                    StartCoroutine("Compare", selectedObject);
+                    StartCoroutine("Compare", ObjectSelected);
                 }
 
                 // Play the sound associated with this card name
                 if (soundSource)
                 {
-                    var soundResource = Resources.Load<AudioClip>("Sounds/" + selectedObject.Find("CardFront/Text").GetComponent<Text>().text);
+                    var soundResource = Resources.Load<AudioClip>("Sounds/" + ObjectSelected.Find("CardFront/Text").GetComponent<Text>().text);
 
                     if (soundResource)
                     {
@@ -416,18 +416,18 @@ namespace Project
         /// <summary>
         /// Compares two selected card objects. If they are the same we get bonus and the cards are removed from the level. If wrong, the cards are returned to face down
         /// </summary>
-        IEnumerator Compare(Transform selectedObject)
+        IEnumerator Compare(Transform ObjectSelected)
         {
             yield return new WaitForSeconds(0.4f);
 
             // If we selected two objects, check if they match. In Image - Text mode we compare the image of the object to the name of the other object. In Text - Text mode we compare the pairs and see if they have the same firstText and secondText values
-            if ( firstObject.name == selectedObject.name )
+            if ( firstObject.name == ObjectSelected.name )
             {
                 // Play the correct animation
-                if (selectedObject.GetComponent<Animator>())
+                if (ObjectSelected.GetComponent<Animator>())
                 {
                     firstObject.GetComponent<Animator>().Play("Correct");
-                    selectedObject.GetComponent<Animator>().Play("Correct");
+                    ObjectSelected.GetComponent<Animator>().Play("Correct");
                 }
 
                 // Add the bonus to the score
@@ -435,11 +435,11 @@ namespace Project
 
                 // Make the buttons uninteractable, so we don't have to move through them in the grid
                 firstObject.GetComponent<Button>().interactable = false;
-                selectedObject.GetComponent<Button>().interactable = false;
+                ObjectSelected.GetComponent<Button>().interactable = false;
 
                 // Stop listening for a click on these objects
                 firstObject.GetComponent<Button>().onClick.RemoveAllListeners();// RemoveListener(delegate { SelectObject(firstObject); });
-                selectedObject.GetComponent<Button>().onClick.RemoveAllListeners();// RemoveListener(delegate { SelectObject(selectedObject); });
+                ObjectSelected.GetComponent<Button>().onClick.RemoveAllListeners();// RemoveListener(delegate { SelectObject(selectedObject); });
 
                 //If there is a source and a sound, play it from the source
                 if (soundSource && soundCorrect) soundSource.GetComponent<AudioSource>().PlayOneShot(soundCorrect);
@@ -453,10 +453,10 @@ namespace Project
             else // If there is no match between the two objects
             {
                 // Play the wrong animation
-                if (selectedObject.GetComponent<Animator>())
+                if (ObjectSelected.GetComponent<Animator>())
                 {
                     firstObject.GetComponent<Animator>().Play("Wrong");
-                    selectedObject.GetComponent<Animator>().Play("Wrong");
+                    ObjectSelected.GetComponent<Animator>().Play("Wrong");
                 }
 
                 //If there is a source and a sound, play it from the source
@@ -481,13 +481,13 @@ namespace Project
             }
 
             // Select the next available button for keyboard/gamepad controls
-            if (eventSystem) eventSystem.SetSelectedGameObject(selectedObject.gameObject);
+            if (eventSystem) eventSystem.SetSelectedGameObject(ObjectSelected.gameObject);
         }
 
         /// <summary>
         /// Shuffles the specified sprite pairs list, and returns it
         /// </summary>
-        Sprite[] ShuffleImagePairs(Sprite[] pairs)
+        Sprite[] shuffleimagePairs(Sprite[] pairs)
         {
             // Go through all the sprite pairs and shuffle them
             for (index = 0; index < pairsImage.Length; index++)
@@ -512,7 +512,7 @@ namespace Project
         /// Shuffles the specified pairs list, and returns it
         /// </summary>
         /// <param name="s">A list of pairs</param>
-        string[] ShuffleTextPairs(string[] pairs)
+        string[] shuffletextPairs(string[] pairs)
         {
             // Go through all the pairs and shuffle them
             for (index = 0; index < pairsText.Length; index++)
@@ -625,8 +625,8 @@ namespace Project
                 }
 
                 // Update the level attributes based on the type of pairs we have
-                if (pairsType == "Image") UpdateLevel();
-                else if (pairsType == "Text") UpdateLevel();
+                if (pairsType == "Image") updateLevel();
+                else if (pairsType == "Text") updateLevel();
             }
             else // Otherwise if we finished all pairs in the game, go to the Victory screen
             {
@@ -636,12 +636,12 @@ namespace Project
                     if (pairsImage.Length > 0)
                     {
                         // Randomize the list of pairs
-                        if (randomizePairs == true) pairsImage = ShuffleImagePairs(pairsImage);
+                        if (randomizePairs == true) pairsImage = shuffleimagePairs(pairsImage);
                     }
                     else if (pairsText.Length > 0)
                     {
                         // Randomize the list of pairs
-                        if (randomizePairs == true) pairsText = ShuffleTextPairs(pairsText);
+                        if (randomizePairs == true) pairsText = shuffletextPairs(pairsText);
                     }
 
                     currentPair = 0;
@@ -661,8 +661,8 @@ namespace Project
                     }
 
                     // Update the level attributes based on the type of pairs we have
-                    if (pairsType == "Image") UpdateLevel();
-                    else if (pairsType == "Text") UpdateLevel();
+                    if (pairsType == "Image") updateLevel();
+                    else if (pairsType == "Text") updateLevel();
                 }
                 else
                 {
@@ -675,7 +675,7 @@ namespace Project
         /// <summary>
         /// Creates a new card based on the default card object
         /// </summary>
-        public void CreateCard( bool showName )
+        public void createCard( bool showName )
         {
             // Create a new button
             RectTransform newButton = Instantiate(cardObject) as RectTransform;
@@ -722,7 +722,7 @@ namespace Project
         /// <summary>
         /// Updates the level, showing the next set of pairs ( Used for Image - Text matching )
         /// </summary>
-        public void UpdateLevel()
+        public void updateLevel()
         {
             // Remove all previous cards except the default one
             for ( index = 0; index < cardsGridObject.childCount; index++)
@@ -757,10 +757,10 @@ namespace Project
                     if (index >= levelPairs) break;
 
                     // Create two buttons for this image
-                    CreateCard(false);
+                    createCard(false);
 
-                    if (matchImageToName == true) CreateCard(true);
-                    else CreateCard(false);
+                    if (matchImageToName == true) createCard(true);
+                    else createCard(false);
 
                     pairsLeft++;
 
@@ -774,10 +774,10 @@ namespace Project
                     if (index >= levelPairs) break;
 
                     // Create two buttons for this image
-                    CreateCard(false);
+                    createCard(false);
 
-                    if ( matchImageToName == true ) CreateCard(true);
-                    else CreateCard(false);
+                    if ( matchImageToName == true ) createCard(true);
+                    else createCard(false);
 
                     pairsLeft++;
 
